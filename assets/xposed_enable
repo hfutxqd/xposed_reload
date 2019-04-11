@@ -1,0 +1,16 @@
+#!/system/bin/sh
+
+if [ ! -d "/data/data/de.robv.android.xposed.installer" ]; then
+  mkdir -p /data/data/de.robv.android.xposed.installer
+fi
+
+mount -o rw,remount /system
+
+apk=$(pm path $1|cut -c9-)
+touch /system/xposed_packages.list
+sed -i "/$1=/d" /system/xposed_packages.list
+echo $1=$apk >> /system/xposed_packages.list
+sleep 1
+xposed_reload
+
+mount -o ro,remount /system
